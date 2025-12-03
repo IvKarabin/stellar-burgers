@@ -19,6 +19,7 @@ import { useDispatch } from '../../services/store';
 import { getCookie } from '../../utils/cookie';
 import { getUser } from '../../services/slices/userSlice';
 import { ProtectedRoute } from '../protected-route/ProtectedRoute';
+import { fetchIngredients } from '../../services/slices/ingredientsSlice';
 
 
 const App = () => {
@@ -27,26 +28,27 @@ const App = () => {
     ?.background;
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   useEffect(() => {
+    dispatch(fetchIngredients());
     const token = getCookie('accessToken');
     if (token) {
       dispatch(getUser());
     }
   }, [dispatch]);
 
-  const navigate = useNavigate();
-
   const closeModal = () => {
     navigate(-1);
   };
+
   return (
     <div className={styles.app}>
       <AppHeader />
       <Routes location={backgroundLocation || location}>
         <Route path='/' element={<ConstructorPage />} />
-        <Route path='/feed' element={<Feed />}>
-          <Route path=':number' element={<OrderInfo />} />
-        </Route>
+        <Route path='/feed' element={<Feed />} />
+        <Route path='/feed/:number' element={<OrderInfo />} />
         <Route
           path='/login'
           element={
@@ -79,24 +81,29 @@ const App = () => {
             </ProtectedRoute>
           }
         />
-        <Route path='/profile'>
-          <Route
-            index
-            element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path='orders'
-            element={
-              <ProtectedRoute>
-                <ProfileOrders />
-              </ProtectedRoute>
-            }
-          />
-        </Route>
+        <Route path='/profile'
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/profile/orders'
+          element={
+            <ProtectedRoute>
+              <ProfileOrders />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/profile/orders/:number'
+          element={
+            <ProtectedRoute>
+              <OrderInfo />
+            </ProtectedRoute>
+          }
+        />
         <Route path='/ingredients/:id' element={<IngredientDetails />} />
         <Route path='*' element={<NotFound404 />} />
       </Routes>
