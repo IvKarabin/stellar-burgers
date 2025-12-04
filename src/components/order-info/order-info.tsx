@@ -1,13 +1,15 @@
-import { FC, useMemo } from 'react';
+import { FC, useMemo, useEffect, useState } from 'react';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
-import { TIngredient } from '@utils-types';
+import { TIngredient, TOrder } from '@utils-types';
 import { useParams } from 'react-router-dom';
 import { useSelector } from '../../services/store';
+import { getOrderByNumberApi } from '../../utils/burger-api';
 
 export const OrderInfo: FC = () => {
   const { number } = useParams();
-  const orderData = useSelector(
+  const [loadedOrder, setLoadedOrder] = useState<TOrder | null>(null);
+  const orderDataFromStore = useSelector(
     (state) =>
       state.feed.orders.find((item) => item.number === Number(number)) ||
       state.orders.orders.find((item) => item.number === Number(number))
@@ -16,6 +18,17 @@ export const OrderInfo: FC = () => {
   const ingredients: TIngredient[] = useSelector(
     (state) => state.ingredients.items
   );
+  useEffect(() => {
+    if (!orderDataFromStore && number) {
+      getOrderByNumberApi(Number(number))
+        .then((res) => {
+          setLoadedOrder(res.orders[0]);
+        })
+        .catch(console.error);
+    }
+  }, [orderDataFromStore, number]);
+
+  const orderData = orderDataFromStore || loadedOrder;
 
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {
