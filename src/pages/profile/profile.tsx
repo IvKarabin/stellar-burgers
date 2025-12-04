@@ -8,7 +8,7 @@ export const Profile: FC = () => {
   const userData = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
   const { isLoading } = useSelector((state) => state.user);
-  
+
   useEffect(() => {
     dispatch(getUser());
   }, [dispatch]);
@@ -52,7 +52,7 @@ export const Profile: FC = () => {
 
   if (isLoading) {
     return <Preloader />;
-  };
+  }
 
   return (
     <ProfileUI

@@ -1,4 +1,4 @@
-import { 
+import {
   ConstructorPage,
   Feed,
   Login,
@@ -14,13 +14,12 @@ import styles from './app.module.css';
 
 import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
 import { useEffect } from 'react';
-import { Route, Routes, useLocation, useNavigate} from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from '../../services/store';
 import { getCookie } from '../../utils/cookie';
 import { getUser } from '../../services/slices/userSlice';
 import { ProtectedRoute } from '../protected-route/ProtectedRoute';
 import { fetchIngredients } from '../../services/slices/ingredientsSlice';
-
 
 const App = () => {
   const location = useLocation();
@@ -81,7 +80,8 @@ const App = () => {
             </ProtectedRoute>
           }
         />
-        <Route path='/profile'
+        <Route
+          path='/profile'
           element={
             <ProtectedRoute>
               <Profile />

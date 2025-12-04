@@ -6,7 +6,7 @@ import { loginUser } from '../../services/slices/userSlice';
 import { useForm } from '../../hooks/useForm';
 
 export const Login: FC = () => {
-  const { values, handleChange } = useForm({ email: '', password: ''});
+  const { values, handleChange } = useForm({ email: '', password: '' });
   const { email, password } = values;
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -28,7 +28,7 @@ export const Login: FC = () => {
       email={email}
       setEmail={(v: string) => {
         handleChange({
-          target: { name: 'email', value: v } 
+          target: { name: 'email', value: v }
         } as React.ChangeEvent<HTMLInputElement>);
       }}
       password={password}

@@ -12,12 +12,17 @@ const getOrders = (orders: TOrder[], status: string): number[] =>
     .slice(0, 20);
 
 export const FeedInfo: FC = () => {
+  const dispatch = useDispatch();
   const feed = useSelector((state) => state.feed);
   const orders: TOrder[] = feed.orders;
 
   const readyOrders = getOrders(orders, 'done');
 
   const pendingOrders = getOrders(orders, 'pending');
+
+  useEffect(() => {
+    dispatch(fetchFeed());
+  }, [dispatch]);
 
   return (
     <FeedInfoUI

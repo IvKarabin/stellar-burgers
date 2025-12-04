@@ -7,12 +7,15 @@ import { useSelector } from '../../services/store';
 
 export const OrderInfo: FC = () => {
   const { number } = useParams();
-  const orderData = useSelector((state) => 
-    state.feed.orders.find((item) => item.number === Number(number)) ||
-    state.orders.orders.find((item) => item.number === Number(number))
+  const orderData = useSelector(
+    (state) =>
+      state.feed.orders.find((item) => item.number === Number(number)) ||
+      state.orders.orders.find((item) => item.number === Number(number))
   );
 
-  const ingredients: TIngredient[] = useSelector((state) => state.ingredients.items);
+  const ingredients: TIngredient[] = useSelector(
+    (state) => state.ingredients.items
+  );
 
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {

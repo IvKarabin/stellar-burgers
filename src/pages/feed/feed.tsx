@@ -7,24 +7,28 @@ import { fetchFeed } from '../../services/slices/feedSlice';
 
 export const Feed: FC = () => {
   const dispatch = useDispatch();
-  const ingredientsLoaded = useSelector((state) => state.ingredients.items.length);
+  const ingredientsLoaded = useSelector(
+    (state) => state.ingredients.items.length > 0
+  );
   const feed = useSelector((state) => state.feed);
 
   const getFeeds = useCallback(() => {
     dispatch(fetchFeed());
   }, [dispatch]);
 
-  useEffect(() => { getFeeds(); }, [getFeeds]);
-
-  const orders: TOrder[] = feed.orders;
+  useEffect(() => {
+    getFeeds();
+  }, [getFeeds]);
 
   if (!ingredientsLoaded) {
     return <Preloader />;
   }
-  
+
   if (feed.isLoading) {
     return <Preloader />;
   }
 
-  <FeedUI orders={orders} handleGetFeeds={getFeeds} />;
+  const orders: TOrder[] = feed.orders;
+
+  return <FeedUI orders={orders} handleGetFeeds={getFeeds} />;
 };

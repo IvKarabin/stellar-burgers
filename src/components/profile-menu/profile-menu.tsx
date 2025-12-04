@@ -13,7 +13,7 @@ export const ProfileMenu: FC = () => {
     const result = await dispatch(logoutUser());
     if (logoutUser.fulfilled.match(result)) {
       navigate('/login', { replace: true });
-    };
+    }
   };
 
   return <ProfileMenuUI handleLogout={handleLogout} pathname={pathname} />;

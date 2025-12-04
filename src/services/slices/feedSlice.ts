@@ -7,6 +7,9 @@ export const fetchFeed = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await getFeedsApi();
+      if (!response || !response.orders) {
+        return rejectWithValue('Неверный формат данных от сервера');
+      }
       return response;
     } catch (error) {
       if (error instanceof Error) {

@@ -1,4 +1,4 @@
-import { TOrdersData } from "@utils-types";
+import { TOrdersData } from '@utils-types';
 
 export type FeedInfoUIProps = {
   feed: TOrdersData;
