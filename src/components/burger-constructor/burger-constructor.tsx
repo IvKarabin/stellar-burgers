@@ -1,24 +1,53 @@
 import { FC, useMemo } from 'react';
 import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useSelector, useDispatch } from '../../services/store';
+import { createOrder } from '../../services/slices/orderSlice';
 
 export const BurgerConstructor: FC = () => {
-  /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { bun, ingredients } = useSelector((state) => state.burgerConstructor);
+  const orders = useSelector((state) => state.orders);
+  const isAuth = useSelector((state) => state.user.isAuth);
+
   const constructorItems = {
-    bun: {
-      price: 0
-    },
-    ingredients: []
+    bun: bun,
+    ingredients: ingredients || []
   };
 
-  const orderRequest = false;
+  const orderRequest = orders.isLoading;
 
-  const orderModalData = null;
+  const orderModalData = orders.orders.length
+    ? orders.orders[orders.orders.length - 1]
+    : null;
 
   const onOrderClick = () => {
-    if (!constructorItems.bun || orderRequest) return;
+    if (!isAuth) {
+      navigate('/login', { state: { from: location } });
+      return;
+    }
+    if (!bun) {
+      return;
+    }
+
+    const idArr: string[] = [];
+    idArr.push(bun._id);
+    ingredients.forEach((it: TConstructorIngredient) => idArr.push(it._id));
+    idArr.push(bun._id);
+    dispatch(createOrder(idArr));
+    navigate(location.pathname, {
+      state: { ...location.state, showOrderModal: true }
+    });
   };
-  const closeOrderModal = () => {};
+
+  const closeOrderModal = () => {
+    navigate(location.pathname, {
+      state: { ...location.state, showOrderModal: false }
+    });
+  };
 
   const price = useMemo(
     () =>
@@ -30,14 +59,14 @@ export const BurgerConstructor: FC = () => {
     [constructorItems]
   );
 
-  return null;
+  const toShowModal = location.state?.showOrderModal;
 
   return (
     <BurgerConstructorUI
       price={price}
       orderRequest={orderRequest}
       constructorItems={constructorItems}
-      orderModalData={orderModalData}
+      orderModalData={toShowModal ? orderModalData : null}
       onOrderClick={onOrderClick}
       closeOrderModal={closeOrderModal}
     />
