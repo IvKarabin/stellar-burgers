@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { orderBurgerApi, getOrdersApi } from '../../utils/burger-api';
+import { orderBurgerApi, getOrdersApi, getOrderByNumberApi } from '../../utils/burger-api';
 import { clearConstructor } from './constructorSlice';
 import { TOrder } from '../../utils/types';
 

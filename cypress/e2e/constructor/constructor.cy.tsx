@@ -62,17 +62,14 @@ describe('Конструктор бургера', () => {
 
   it('Работа модалок', () => {
     cy.get(SELECTORS.ingredientLink('643d69a5c3f7b9001cfa0941')).as('linkFilling');
-    cy.get('@linkFilling').click({ force: true });
-
-    cy.get(SELECTORS.modal).as('modal').should('be.visible');
-
+    cy.get('@linkFilling').click({force: true});
+    cy.get(SELECTORS.modal, {timeout: 3000}).as('modal').should('be.visible');
     cy.get(SELECTORS.modalClose).as('modalClose');
     cy.get('@modalClose').click();
     assertModalClosed();
 
     cy.get(SELECTORS.ingredientLink('643d69a5c3f7b9001cfa093e')).as('linkFilet');
     cy.get('@linkFilet').click({ force: true });
-
     cy.get('@modal').should('be.visible');
     cy.get(SELECTORS.modalOverlay).as('overlay');
     cy.get('@overlay').click({ force: true });
