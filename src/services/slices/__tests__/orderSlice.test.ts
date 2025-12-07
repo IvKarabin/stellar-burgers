@@ -1,4 +1,10 @@
-import reducer, { createOrder, fetchOrders, initialState } from '../orderSlice';
+import reducer, {
+  createOrder,
+  fetchOrders,
+  initialState,
+  fetchOrderById
+} from '../orderSlice';
+import { getOrderByNumberApi } from '../../../utils/burger-api';
 
 const mockOrder = {
   _id: 'order1',
@@ -76,6 +82,34 @@ describe('ordersSlice', () => {
       );
       expect(next.isLoading).toBe(false);
       expect(next.error).toBe('ERROR');
+    });
+  });
+
+  describe('fetchOrderById', () => {
+    test('pending', () => {
+      const next = reducer(initialState, fetchOrderById.pending('', 1111));
+      expect(next.isLoading).toBe(true);
+      expect(next.error).toBeNull();
+      expect(next.currentOrder).toBeNull();
+    });
+
+    test('fulfilled', () => {
+      const next = reducer(
+        initialState,
+        fetchOrderById.fulfilled(mockOrder, '', 1111)
+      );
+      expect(next.isLoading).toBe(false);
+      expect(next.currentOrder).toEqual(mockOrder);
+    });
+
+    test('rejected', () => {
+      const next = reducer(
+        initialState,
+        fetchOrderById.rejected(new Error('fail'), '', 1111, 'ERROR')
+      );
+      expect(next.isLoading).toBe(false);
+      expect(next.error).toBe('ERROR');
+      expect(next.currentOrder).toBeNull();
     });
   });
 });

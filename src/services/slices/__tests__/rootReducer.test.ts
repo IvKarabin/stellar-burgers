@@ -20,7 +20,7 @@ describe('root reducer & store initialization, unknown action handle', () => {
   });
 
   test('handle unknown action', () => {
-    const fakeAction = {type: 'UNKNOWN_ACTION'};
+    const fakeAction = { type: 'UNKNOWN_ACTION' };
     const state = rootReducer(undefined, fakeAction);
     expect(state).toEqual({
       burgerConstructor: constructorReducer(undefined, fakeAction),

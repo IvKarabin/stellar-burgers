@@ -1,5 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { orderBurgerApi, getOrdersApi, getOrderByNumberApi } from '../../utils/burger-api';
+import {
+  orderBurgerApi,
+  getOrdersApi,
+  getOrderByNumberApi
+} from '../../utils/burger-api';
 import { clearConstructor } from './constructorSlice';
 import { TOrder } from '../../utils/types';
 
@@ -38,14 +42,34 @@ export const fetchOrders = createAsyncThunk(
   }
 );
 
+export const fetchOrderById = createAsyncThunk(
+  'orders/fetchOrderById',
+  async (orderId: number, { rejectWithValue }) => {
+    try {
+      const response = await getOrderByNumberApi(orderId);
+      if (response.success && response.orders.length > 0) {
+        return response.orders[0];
+      }
+      return rejectWithValue('Заказа не существует');
+    } catch (error) {
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+      return rejectWithValue('Ошибка при загрузке заказа');
+    }
+  }
+);
+
 interface OrdersState {
   orders: TOrder[];
+  currentOrder?: TOrder | null;
   isLoading: boolean;
   error: string | null;
 }
 
 export const initialState: OrdersState = {
   orders: [],
+  currentOrder: null,
   isLoading: false,
   error: null
 };
@@ -79,6 +103,19 @@ export const ordersSlice = createSlice({
       .addCase(fetchOrders.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
+      })
+      .addCase(fetchOrderById.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchOrderById.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.currentOrder = action.payload;
+      })
+      .addCase(fetchOrderById.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+        state.currentOrder = null;
       });
   }
 });
