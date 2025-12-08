@@ -8,13 +8,13 @@ interface IngredientsState {
   error: string | null;
 }
 
-const initialState: IngredientsState = {
+export const initialState: IngredientsState = {
   isLoading: false,
   items: [],
   error: null
 };
 
-const fetchIngredients = createAsyncThunk(
+export const fetchIngredients = createAsyncThunk(
   'ingredients/fetchIngredients',
   async (_, { rejectWithValue }) => {
     try {
@@ -50,5 +50,4 @@ export const ingredientsSlice = createSlice({
   }
 });
 
-export { fetchIngredients };
 export default ingredientsSlice.reducer;

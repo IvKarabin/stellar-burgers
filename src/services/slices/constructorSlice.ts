@@ -6,7 +6,7 @@ type TConstructorState = {
   ingredients: TConstructorIngredient[];
 };
 
-const initialState: TConstructorState = {
+export const initialState: TConstructorState = {
   bun: null,
   ingredients: []
 };
@@ -54,12 +54,8 @@ export const constructorSlice = createSlice({
   }
 });
 
-export const {
-  //  addIngredient,
-  removeIngredient,
-  clearConstructor,
-  moveIngredient
-} = constructorSlice.actions;
+export const { removeIngredient, clearConstructor, moveIngredient } =
+  constructorSlice.actions;
 
 export const addIngredient = (ingredient: TIngredient) => {
   if (ingredient.type === 'bun') {
